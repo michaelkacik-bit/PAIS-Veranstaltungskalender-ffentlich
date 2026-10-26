@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102a43"><title>PAIS Veranstaltungsradar</title>
+<style>
+:root{--navy:#102a43;--blue:#176b87;--paper:#f4f7fa;--ink:#172b3a;--muted:#607482;--line:#dce5eb}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(130deg,#102a43,#176b87);color:#fff;padding:28px 20px 34px}.wrap{max-width:1100px;margin:auto}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.76rem;font-weight:750;color:#bde9e4}h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.1;margin:.5rem 0}.intro{max-width:760px;color:#e5f1f5}
+main{max-width:1100px;margin:-16px auto 40px;padding:0 16px}.toolbar,.panel,.event{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 18px #102a4309}.toolbar{padding:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:end}
+label{display:block;font-size:.82rem;font-weight:700;margin-bottom:5px;color:#3d5362}input,select,button{font:inherit}input,select{width:100%;padding:11px 12px;border:1px solid #c8d6df;border-radius:10px;background:white;color:var(--ink)}button,.btn{border:0;border-radius:10px;padding:11px 15px;background:var(--blue);color:white;font-weight:750;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+button.secondary{background:#e7f0f4;color:var(--navy)}.stats{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:130px}.stat strong{display:block;font-size:1.35rem;color:var(--blue)}.stat span,.small{font-size:.82rem;color:var(--muted)}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:22px 2px 12px}.sectionhead h2{margin:0;font-size:1.25rem}.events{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.event{padding:17px;display:flex;flex-direction:column;gap:9px}.event h3{font-size:1.08rem;line-height:1.3;margin:0}.event p{margin:0;color:#425968;font-size:.93rem}.meta{display:flex;gap:7px;flex-wrap:wrap}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#e8f3f5;color:#18586b;font-size:.76rem;font-weight:750}.tag.gold{background:#fff1d4;color:#76500b}.eventfooter{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:7px}.eventfooter a{font-weight:750;color:var(--blue);text-decoration:none}.save{background:#edf3f6;color:var(--navy);padding:8px 10px}.calendarbox{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:8px;border-top:1px solid var(--line)}.calendarbox label{font-size:.75rem}.calendarbox input{padding:8px;font-size:.88rem}.calendar-actions{grid-column:1/-1}.calendar-actions button{font-size:.82rem;padding:9px 11px}.notice{padding:13px 15px;border-radius:12px;background:#fff6df;border:1px solid #f0d99d;color:#604b1c;font-size:.9rem;margin:16px 0}.panel{padding:16px;margin-top:18px}.sources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.source{padding:13px;border:1px solid var(--line);border-radius:12px}.source strong{display:block;margin-bottom:4px}.source a{color:var(--blue);font-weight:700;text-decoration:none;font-size:.9rem}.empty{grid-column:1/-1;padding:30px;text-align:center;border:1px dashed #bdcbd4;border-radius:16px;background:#fff;color:var(--muted)}footer{max-width:1100px;margin:auto;padding:0 16px 30px;color:var(--muted);font-size:.82rem}
+@media(max-width:760px){.toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.events{grid-template-columns:1fr}.sources{grid-template-columns:1fr}.sectionhead{align-items:flex-start;flex-direction:column}}@media(max-width:420px){.toolbar{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="wrap"><div class="eyebrow">Fortbildung · Forschung · Versorgung</div><h1>PAIS Veranstaltungsradar</h1><p class="intro">Täglich aktualisierte Fundstellen zu ME/CFS, Post-COVID, Long COVID und Post-Vac – mit Fokus auf Medizin und Forschung.</p></div></header>
+<main>
+<section class="toolbar">
+<div><label for="q">Suchbegriff</label><input id="q" placeholder="z. B. POTS, PEM, Diagnostik"></div>
+<div><label for="kind">Veranstaltungstyp</label><select id="kind"><option value="all">Alle Typen</option><option>Fortbildung</option><option>Kongress</option><option>Webinar</option><option>CME</option><option>Community</option></select></div>
+<div><label for="topic">Thema</label><select id="topic"><option value="all">Alle Themen</option><option>ME/CFS</option><option>Post-COVID</option><option>Post-Vac</option><option>PAIS</option></select></div>
+<div><button id="refresh" style="width:100%">↻ Daten neu laden</button></div>
+</section>
+<div class="stats"><div class="stat"><strong id="count">–</strong><span>Treffer</span></div><div class="stat"><strong id="sourceCount">–</strong><span>Suchabfragen</span></div><div class="stat"><strong id="updated">–</strong><span>Letzte Aktualisierung</span></div></div>
+<div class="notice"><b>Hinweis:</b> Die Server-Automatisierung aktualisiert die Fundstellen täglich. „Daten neu laden“ lädt die zuletzt gespeicherten Ergebnisse; es startet keine neue Websuche. Veröffentlichungsdatum und Veranstaltungstag sind verschieden – bitte den Termin auf der Originalseite prüfen.</div>
+<div class="sectionhead"><h2 id="resultsTitle">Aktuelle Fundstellen</h2><span class="small">Neueste Veröffentlichung zuerst</span></div><div id="events" class="events"><div class="empty">Veranstaltungen werden geladen …</div></div>
+<section class="panel"><div class="sectionhead" style="margin-top:0"><h2>Originalquellen</h2><span class="small">Auch direkt prüfen</span></div><div class="sources">
+<div class="source"><strong>Deutsche Gesellschaft für ME/CFS</strong><a href="https://www.mecfs.de/informationen-fuer-aerztinnen-und-aerzte/onlinefortbildung/" target="_blank" rel="noopener">Ärztliche Onlinefortbildungen ↗</a></div>
+<div class="source"><strong>Charité Fatigue Centrum</strong><a href="https://cfc.charite.de/fuer_aerzte/literatur_und_weiterbildung" target="_blank" rel="noopener">Weiterbildung ↗</a></div>
+<div class="source"><strong>PAIS CARE · Charité</strong><a href="https://pcn.charite.de/pais_fortbildungen/" target="_blank" rel="noopener">Fortbildungsreihe ↗</a></div>
+<div class="source"><strong>ME/CFS Research Foundation</strong><a href="https://mecfs-research.org/news-events/events/" target="_blank" rel="noopener">Internationale Veranstaltungen ↗</a></div>
+<div class="source"><strong>Fatigatio e. V.</strong><a href="https://www.fatigatio.de/wir-fuer-sie/tagungen-/-workshops/me/cfs-ft-2026" target="_blank" rel="noopener">Tagungen und Workshops ↗</a></div>
+<div class="source"><strong>Aktionskalender</strong><a href="https://aktionskalender.org/termine" target="_blank" rel="noopener">Weitere Termine ↗</a></div>
+</div></section>
+<section class="panel"><h2 style="margin-top:0">Merkliste</h2><div id="savedList" class="small">Noch keine Termine gespeichert.</div></section>
+</main><footer>PAIS Veranstaltungsradar · Öffentliche Fundstellen, keine Garantie auf Vollständigkeit. Termine und CME-Anerkennung bitte beim Veranstalter prüfen.</footer>
+<script>
+let allItems=[],showingSaved=false;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const saved=()=>{try{return JSON.parse(localStorage.getItem('pais_saved')||'[]')}catch{return []}};
+function hashId(s){let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h+s.charCodeAt(i))|0;return 'e'+Math.abs(h)}
+function render(){
+ const q=$('q').value.toLowerCase().trim(),k=$('kind').value,t=$('topic').value;
+ let items=allItems.filter(x=>(!q||(x.title+' '+x.desc+' '+x.source).toLowerCase().includes(q))&&(k==='all'||x.kind===k||k==='Fortbildung'&&x.kind==='CME')&&(t==='all'||x.topic===t));
+ if(showingSaved){const ids=new Set(saved());items=items.filter(x=>ids.has(x.id));$('resultsTitle').textContent='Deine Merkliste'}else $('resultsTitle').textContent='Aktuelle Fundstellen';
+ $('count').textContent=items.length;
+ $('events').innerHTML=items.length?items.map(x=>`<article class="event"><div class="meta"><span class="tag">${esc(x.kind)}</span><span class="tag gold">${esc(x.topic)}</span>${x.date?`<span class="tag">${esc(x.date)}</span>`:''}</div><h3>${esc(x.title)}</h3><p>${esc(x.desc||'Keine Kurzbeschreibung vorhanden.')}</p><div class="small">Quelle: ${esc(x.source)} · Veröffentlichung: ${esc(x.date||'unbekannt')}</div><div class="calendarbox"><div><label>Veranstaltungsdatum</label><input type="date" data-date="${esc(x.id)}"></div><div><label>Beginn (optional)</label><input type="time" data-time="${esc(x.id)}"></div><div class="calendar-actions"><button data-cal="${esc(x.id)}">＋ ICS-Kalenderdatei erstellen</button></div></div><div class="eventfooter"><a href="${esc(x.link)}" target="_blank" rel="noopener">Originalseite öffnen ↗</a><button class="save" data-save="${esc(x.id)}">${saved().includes(x.id)?'★ Gemerkt':'☆ Merken'}</button></div></article>`).join(''):'<div class="empty">Keine passenden Treffer. Ändere die Filter oder prüfe die Originalquellen.</div>';
+ $('events').querySelectorAll('[data-save]').forEach(b=>b.onclick=()=>{let a=saved();a=a.includes(b.dataset.save)?a.filter(v=>v!==b.dataset.save):[...a,b.dataset.save];localStorage.setItem('pais_saved',JSON.stringify(a));render();renderSaved()});
+ $('events').querySelectorAll('[data-cal]').forEach(b=>b.onclick=()=>ics(b.dataset.cal));
+}
+function renderSaved(){let s=saved(),items=allItems.filter(x=>s.includes(x.id));$('savedList').innerHTML=items.length?items.map(x=>`<div style="padding:7px 0"><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.title)}</a></div>`).join(''):'Noch keine Termine gespeichert.'}
+function ics(id){
+ const x=allItems.find(v=>v.id===id),d=document.querySelector(`[data-date="${CSS.escape(id)}"]`)?.value,tm=document.querySelector(`[data-time="${CSS.escape(id)}"]`)?.value||'09:00';
+ if(!d){alert('Bitte tatsächliches Veranstaltungsdatum auswählen. Veröffentlichungsdatum ist nicht automatisch Veranstaltungstag.');return}
+ const [y,m,day]=d.split('-').map(Number),[h,mi]=tm.split(':').map(Number),start=new Date(y,m-1,day,h,mi),end=new Date(start.getTime()+3600000);
+ const fmt=z=>z.getFullYear()+String(z.getMonth()+1).padStart(2,'0')+String(z.getDate()).padStart(2,'0')+'T'+String(z.getHours()).padStart(2,'0')+String(z.getMinutes()).padStart(2,'0')+'00';
+ const clean=v=>String(v||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+ const body=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//PAIS Radar//DE','CALSCALE:GREGORIAN','BEGIN:VEVENT','UID:'+btoa(unescape(encodeURIComponent(x.id))).replace(/=+$/,'')+'@pais-radar','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''),'DTSTART:'+fmt(start),'DTEND:'+fmt(end),'SUMMARY:'+clean(x.title),'DESCRIPTION:'+clean('Thema: '+x.topic+' | Typ: '+x.kind+' | Quelle: '+x.source+' | '+x.link),'URL:'+x.link,'END:VEVENT','END:VCALENDAR'].join('\r\n');
+ const u=URL.createObjectURL(new Blob([body],{type:'text/calendar;charset=utf-8'})),a=document.createElement('a');a.href=u;a.download='PAIS-Termin-'+d+'.ics';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);
+}
+async function load(){
+ $('events').innerHTML='<div class="empty">Gespeicherte Tagesergebnisse werden geladen …</div>';
+ try{const r=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();allItems=j.items||[];$('sourceCount').textContent=j.queries_checked??'–';$('updated').textContent=j.updated_at?new Date(j.updated_at).toLocaleString('de-DE'):'–';render();renderSaved()}
+ catch(e){console.error(e);$('events').innerHTML='<div class="empty"><b>Die Tagesdaten konnten nicht geladen werden.</b><p>Prüfe, ob GitHub Pages aktiviert ist und die tägliche Aktualisierung bereits einmal gelaufen ist.</p><p>Du kannst die Suche im Repository unter Actions → Update events → Run workflow manuell starten.</p></div>'}
+}
+['q','kind','topic'].forEach(id=>$(id).addEventListener(id==='q'?'input':'change',render));
+$('refresh').onclick=load;load();
+</script></body></html>
